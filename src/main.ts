@@ -9,7 +9,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger, cors: true });
   const configService = app.get(ConfigService);
   const port: number = configService.get('PORT') ?? 3000;
+  const environment: string = configService.get('ENV') ?? '-';
   await app.listen(port);
   logger.log(`App is running on port: ${port}`);
+  logger.log(`App environment is: ${environment}`);
 }
 bootstrap();

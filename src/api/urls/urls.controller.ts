@@ -12,7 +12,7 @@ import { UrlsService } from './urls.service';
 import { ColorfulLogger } from 'src/utility/colorful-logger.utility';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
 import { UrlsEntity } from './urls.entity';
-import { NotFoundErrorResponseDTO } from 'src/common-dto/not-found-errror.dto';
+import { NotFoundErrorResponseDTO } from 'src/common-dto/not-found-error.dto';
 
 @Controller({
   path: 'api/urls/',
@@ -57,7 +57,7 @@ export class UrlsController {
       const shortUrlData =
         await this.urlsService.createShortUrl(createShortUrlBody);
       return res.status(HttpStatus.CREATED).json(shortUrlData);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Error creating short URL: ${error.message}`);
       return res.status(HttpStatus.BAD_REQUEST).json({
         message: error.message,
