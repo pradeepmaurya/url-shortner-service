@@ -5,6 +5,7 @@ import { UrlsEntity } from './urls.entity';
 import { UrlCodeGeneratorService } from '../url-code-gen/url-code-gen.service';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
 import { ShortUrlResponseDto } from './dto/short-url-response.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UrlsService {
@@ -12,6 +13,7 @@ export class UrlsService {
     @InjectRepository(UrlsEntity)
     private urlsRepository: Repository<UrlsEntity>,
     private urlCodeGeneratorService: UrlCodeGeneratorService,
+    private configService: ConfigService,
   ) {}
 
   async createShortUrl(
@@ -27,12 +29,12 @@ export class UrlsService {
     });
 
     const savedUrl = await this.urlsRepository.save(urlEntity);
-
+    const baseUrl: string = this.configService.get<string>('BASE_URL') ?? '';
     // Return response DTO
     return {
       id: savedUrl.id,
       originalUrl: savedUrl.originalUrl,
-      shortedUrl: `http:localhost:4000/${shortCode}`,
+      shortedUrl: `${baseUrl}/${shortCode}`,
       shortCode: shortCode,
       createdAt: savedUrl.createdAt,
       message: 'Short URL created successfully',

@@ -20,7 +20,7 @@ export class UrlCodeGeneratorService {
       ?.limit(1)
       ?.getRawOne();
     const lastId = lastRecord?.id ?? 1;
-    return this.encodeBase62(lastId + 1);
+    return this.encodeBase62(lastId + 1000); // offset to make it look better
   }
 
   private encodeBase62(num: number): string {
