@@ -1,9 +1,8 @@
-import { Controller, Get, Param, Redirect } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Redirect } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ColorfulLogger } from './utility/colorful-logger.utility';
 import { UrlsService } from './api/urls/urls.service';
 import { UrlsEntity } from './api/urls/urls.entity';
-// import { Response } from 'express';
 
 @Controller({ path: '/' })
 export class AppController {
@@ -13,13 +12,17 @@ export class AppController {
     private urlsService: UrlsService,
   ) {}
 
+  @Get('_health')
+  public getHealth() {
+    return { status: HttpStatus.OK, message: this.appService.getHealth() };
+  }
+
   @Get(':shortCode')
   @Redirect()
   async getOriginalUrl(@Param('shortCode') shortCode: string) {
     const originalUrlEntity: UrlsEntity =
       await this.urlsService.getOriginalUrl(shortCode);
     if (originalUrlEntity?.originalUrl) {
-      // return originalUrlEntity
       return { url: originalUrlEntity?.originalUrl };
     }
   }
